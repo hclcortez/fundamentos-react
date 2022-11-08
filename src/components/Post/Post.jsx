@@ -1,29 +1,38 @@
+import { format, formatDistanceToNow } from 'date-fns'
+import  ptBr  from 'date-fns/locale/pt-BR'
+
+
 import { Avatar } from '../Avatar/Avatar'
 import { Comment } from '../Comment/Comment'
 import styles from './Post.module.css'
 
-export function Post() {
+export function Post(props) {
+
+    const puslishedDateFormatted = format(props.publishAt, "d 'de' LLLL 'às' HH:mm'h'",{locale:ptBr})
+
+    const publishedDateRelativeToNow = formatDistanceToNow(props.publishAt, {
+        locale:ptBr,
+        addSuffix: true
+    })
+
     return (
         <article className={styles.post}>
             <header>
                 <div className={styles.author}>
-                    <Avatar src="https://github.com/hclcortez.png" />
+                    <Avatar src={props.author.avatarUrl} />
                     <div className={styles.authorInfo}>
-                        <strong>Hover Cortez</strong>
+                        <strong>{props.author.name}</strong>
                         <span>Web Developer</span>
                     </div>
                 </div>
 
-                <time title="13 de Março às 11:20" dateTime="2022-05-11 08:30:00">Publicado há 1h</time>
+                <time title={puslishedDateFormatted} dateTime={props.publishAt.toISOString()}>{publishedDateRelativeToNow}</time>
             </header>
 
             <div className={styles.content}>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quam eius excepturi fugit, saepe illum molestiae et dolore aut non dolor nesciunt eveniet provident modi architecto, quo cupiditate in, voluptas repudiandae.</p>
-
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quam eius excepturi fugit, saepe illum molestiae et dolore aut non.</p>
 
                 <p>
-                    <a href="">#novoprojeto</a> <a href="">#projetonovo</a>
+                    <a href=""></a> <a href="">#projetonovo</a>
                 </p>
             </div>
 
@@ -40,6 +49,7 @@ export function Post() {
             </form>
 
             <div className={styles.commentList}>
+                {props.content.map( item => item.type === 'paragraph' ? <p>{item.content}</p> : <p><a href='#'>{item.content}</a></p>)}
                 <Comment />
                 <Comment />
                 <Comment />
