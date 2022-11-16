@@ -1,5 +1,6 @@
 import { format, formatDistanceToNow } from 'date-fns'
 import  ptBr  from 'date-fns/locale/pt-BR'
+import { useState } from 'react'
 
 
 import { Avatar } from '../Avatar/Avatar'
@@ -8,12 +9,23 @@ import styles from './Post.module.css'
 
 export function Post(props) {
 
+
+    const [comments, setComments]  = useState([
+        1,2
+    ])
+
     const puslishedDateFormatted = format(props.publishAt, "d 'de' LLLL 'às' HH:mm'h'",{locale:ptBr})
 
     const publishedDateRelativeToNow = formatDistanceToNow(props.publishAt, {
         locale:ptBr,
         addSuffix: true
     })
+
+    function handleCreateNewComment() {
+        event.preventDefault();
+
+        setComments([...comments, comments.length+1]);
+    }
 
     return (
         <article className={styles.post}>
@@ -36,7 +48,7 @@ export function Post(props) {
                 </p>
             </div>
 
-            <form className={styles.commentForm}>
+            <form onSubmit={handleCreateNewComment} className={styles.commentForm}>
                 <strong>Deixe seu feedback</strong>
 
                 <textarea
@@ -49,10 +61,8 @@ export function Post(props) {
             </form>
 
             <div className={styles.commentList}>
-                {props.content.map( item => item.type === 'paragraph' ? <p>{item.content}</p> : <p><a href='#'>{item.content}</a></p>)}
-                <Comment />
-                <Comment />
-                <Comment />
+                {props.content.map( item => item.type === 'paragraph' ? <p>{item.content}</p> : <p><a href='#'>{item.content }</a></p>)}
+                {comments.map(item => <Comment />)}
             </div>
         </article>
     )
