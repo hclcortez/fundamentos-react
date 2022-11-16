@@ -11,8 +11,10 @@ export function Post(props) {
 
 
     const [comments, setComments]  = useState([
-        1,2
+        "Post muito bacana"
     ])
+
+    const [newCommentText, setNewCommentText] = useState('')
 
     const puslishedDateFormatted = format(props.publishAt, "d 'de' LLLL 'às' HH:mm'h'",{locale:ptBr})
 
@@ -24,7 +26,12 @@ export function Post(props) {
     function handleCreateNewComment() {
         event.preventDefault();
 
-        setComments([...comments, comments.length+1]);
+        setComments([...comments, newCommentText]);
+        setNewCommentText('');
+    }
+
+    function handleNewCommentChange(){
+        setNewCommentText(event.target.value);
     }
 
     return (
@@ -52,7 +59,10 @@ export function Post(props) {
                 <strong>Deixe seu feedback</strong>
 
                 <textarea
+                    name="comment"
                     placeholder='Deixe seu comentário'
+                    value={newCommentText}
+                    onChange={handleNewCommentChange}
                 />
 
                 <footer>
@@ -62,7 +72,9 @@ export function Post(props) {
 
             <div className={styles.commentList}>
                 {props.content.map( item => item.type === 'paragraph' ? <p>{item.content}</p> : <p><a href='#'>{item.content }</a></p>)}
-                {comments.map(item => <Comment />)}
+                {comments.map(comment => {
+                    return <Comment content={comment}/>
+                })}
             </div>
         </article>
     )
