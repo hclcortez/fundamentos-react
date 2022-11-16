@@ -31,12 +31,19 @@ export function Post(props) {
     }
 
     function handleNewCommentChange() {
+        event.target.setCustomValidity('');
         setNewCommentText(event.target.value);
     }
 
-    const deleteComment = commentToDelete => {
+    function deleteComment(commentToDelete) {
         setComments(comments.filter(comment => comment != commentToDelete));
     }
+
+    function  handleNewCommentInvalid(){
+        event.target.setCustomValidity('Este campo deve ser prenchido.');
+    }
+
+    const isNewCommentEmpty = newCommentText.length === 0;
 
     return (
         <article className={styles.post}>
@@ -67,10 +74,12 @@ export function Post(props) {
                     placeholder='Deixe seu comentário'
                     value={newCommentText}
                     onChange={handleNewCommentChange}
+                    required
+                    onInvalid={handleNewCommentInvalid}
                 />
 
                 <footer>
-                    <button type='submit'>Publicar</button>
+                    <button type='submit' disabled={isNewCommentEmpty}>Publicar</button>
                 </footer>
             </form>
 
